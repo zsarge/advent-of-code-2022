@@ -57,7 +57,7 @@ if extension == "rb"
 #!/usr/bin/env ruby
 # https://adventofcode.com/#{YEAR}/day/#{problemNumber}
 # Run with: 'ruby #{filename}'
-# using Ruby 2.5.1
+# using Ruby 3.1.2
 # by Zack Sargent
 
 FILE_NAME = \"#{input_file_name}\"
