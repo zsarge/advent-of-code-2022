@@ -23,21 +23,40 @@ def parse_stacks stacks
   model
 end
 
-def follow_instructions stacks, instructions
-  instructions.split("\n").each do |line|
-    match_data = line.match /move (\d+) from (\d) to (\d)/
-    match_data[1].to_i.times do
-      from = match_data[2]
-      to = match_data[3]
+def parse_instructions instructions
+  instructions.split("\n").map {|line| 
+    results = line.match /move (\d+) from (\d) to (\d)/
+    [results[1], results[2], results[3]]
+  }
+end
+
+def part_1 stacks, instructions
+  instructions.each do |(quantity, from, to)|
+    quantity.to_i.times do
       stacks[to].push stacks[from].pop
     end
   end
   return stacks
 end
 
-# FILE_NAME = "input5.txt"
-FILE_NAME = "test.txt"
-raw_stacks, instructions  = File.read(FILE_NAME).split "\n\n"
+def part_2 stacks, instructions
+  instructions.each do |(quantity, from, to)|
+    stacks[to].concat stacks[from].slice!(-quantity.to_i..)
+  end
+  return stacks
+end
 
-stacks = follow_instructions (parse_stacks raw_stacks), instructions
-p stacks.values.reduce("") {|acc, ele| acc + ele.last}
+def solve stacks
+  stacks.values.reduce("") {|acc, ele| acc + ele.last}
+end
+
+raw_stacks, raw_instructions = File.read("input5.txt").split "\n\n"
+instructions = parse_instructions raw_instructions
+
+# part 1
+stacks = parse_stacks raw_stacks
+puts solve part_1 stacks, instructions
+
+# part 2
+stacks = parse_stacks raw_stacks # reset to initial state
+puts solve part_2 stacks, instructions
