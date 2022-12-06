@@ -7,9 +7,9 @@
 INPUTS = File.read("input6.txt").chomp
 
 def find_start buffer, size
-  size + 1 + buffer.chars.each_cons(size).with_index.take_while { |a, idx|
-    a.uniq.size != size
-  }.last[1]
+  buffer.chars.each_cons(size).find_index{|str| 
+    str.uniq.size == size 
+  } + size
 end
 
 p find_start INPUTS, 4  # part 1
