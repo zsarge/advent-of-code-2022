@@ -20,13 +20,13 @@ end
 def parse_instructions instructions
   instructions.split("\n").map {|line| 
     results = line.match /move (\d+) from (\d) to (\d)/
-    [results[1], results[2], results[3]]
+    [results[1].to_i, results[2], results[3]]
   }
 end
 
 def part_1 stacks, instructions
   instructions.each do |(quantity, from, to)|
-    quantity.to_i.times do
+    quantity.times do
       stacks[to].push stacks[from].pop
     end
   end
@@ -35,7 +35,7 @@ end
 
 def part_2 stacks, instructions
   instructions.each do |(quantity, from, to)|
-    stacks[to].concat stacks[from].slice!(-quantity.to_i..)
+    stacks[to].concat stacks[from].slice!(-quantity..)
   end
   return stacks
 end
