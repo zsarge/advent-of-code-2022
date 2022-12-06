@@ -11,16 +11,10 @@ def parse_stacks stacks
     (@rows.size-2).downto(0).map{ @rows[_1][index] }.take_while{ _1 =~ /\w/ }
   end
 
-  model = {}
-
-  @rows.last.chars.each.with_index do |c, index| # todo: collect to map
-    if c =~ /\d/
-      # puts "#{c} = #{parse_index index}"
-      model[c] = parse_index index
-    end
-  end
-
-  model
+  @rows.last.chars.each.with_index
+    .filter {|c, index| c =~ /\d/}
+    .map {|c, index| [c, parse_index(index)]}
+    .to_h
 end
 
 def parse_instructions instructions
