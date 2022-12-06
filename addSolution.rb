@@ -4,7 +4,7 @@
 #
 # This assumes you are running a linux like system.
 
-YEAR = 2020
+YEAR = 2022
 
 # Take input ----------------
 problemNumber = ""
