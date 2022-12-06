@@ -12,15 +12,15 @@ def priority letter
     1 + (letter.ord - 'a'.ord)
   else
     27 + (letter.ord - 'A'.ord)
-  end 
+  end
 end
 
 INPUTS = File.readlines("input3.txt").map(&:chomp)
 
 # part 1
 p INPUTS
-  .flat_map{ |contents| 
-    halfway = contents.size/2 
+  .flat_map{ |contents|
+    halfway = contents.size/2
     left = Set.new(contents[...halfway].chars)
     right = Set.new(contents[halfway..].chars)
     left.intersection(right).map{ priority _1 }
@@ -32,7 +32,7 @@ p INPUTS
   .map{ |line| Set.new line.chars }
   .each_slice(3)
   .flat_map{ |(elf_1, elf_2, elf_3)|
-    elf_1.intersection(elf_2).intersection(elf_3).map {priority _1}
+    elf_1.intersection(elf_2).intersection(elf_3).map{ priority _1 }
   }
   .sum
 
