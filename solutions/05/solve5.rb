@@ -41,7 +41,7 @@ def part_2 stacks, instructions
 end
 
 def solve stacks
-  stacks.values.reduce("") {|acc, ele| acc + ele.last}
+  stacks.values.map(&:last).join
 end
 
 raw_stacks, raw_instructions = File.read("input5.txt").split "\n\n"
