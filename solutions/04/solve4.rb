@@ -20,11 +20,11 @@ INPUTS = File.readlines("input4.txt", chomp: true).map{ |line|
   [Elf.new($1.to_i, $2.to_i), Elf.new($3.to_i, $4.to_i)]
 }
 
-p INPUTS.filter{ |(elf1, elf2)|
+p INPUTS.count{ |(elf1, elf2)|
     elf1.fully_contains?(elf2) || elf2.fully_contains?(elf1)
-  }.size
+  }
 
-p INPUTS.filter{ |(elf1, elf2)|
+p INPUTS.count{ |(elf1, elf2)|
     elf1.overlaps?(elf2) || elf2.overlaps?(elf1)
-  }.size
+  }
 
