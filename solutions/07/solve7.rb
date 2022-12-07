@@ -6,20 +6,19 @@
 
 class Directory
   attr_accessor :files
-  attr_reader :parentDir, :name, :total_size
+  attr_reader :parentDir, :name
 
-  def initialize(name, parentDir, files=[])
-    @files = files
+  def initialize(name, parentDir)
     @parentDir = parentDir
     @name = name
-    @total_size = 0
+    @files = []
   end
 
   def size
-    @total_size = @files.sum {|file| file.size}
+    @files.sum {|file| file.size}
   end
 
-  def flatten_dirs 
+  def flatten_dirs
     @files.grep(Directory).reduce([]) { |acc, file|
       acc.push file
       acc.concat file.flatten_dirs
@@ -50,19 +49,17 @@ end
 
 INPUTS = File.readlines("input7.txt", chomp: true)
 
+# build up directory tree with files
 process INPUTS.drop(1) # drop 1 to ignore "cd /"
 
+# calculate file sizes
 TOAL_UNUSED_SPACE = 70_000_000 - $top.size
 MIN_FILE_SIZE = 30_000_000 - TOAL_UNUSED_SPACE
 
+sizes = $top.flatten_dirs.map{ |dir| dir.size }
+
 # part 1
-p $top.flatten_dirs
-  .filter{ |dir| dir.total_size <= 100000 }
-  .sum{ |dir| dir.total_size }
+p sizes.filter{ _1 <= 100_000 }.sum
 
 # part 2
-p $top.flatten_dirs
-  .filter{ |dir| dir.total_size >= MIN_FILE_SIZE }
-  .sort_by{ |dir| dir.total_size }
-  .min{ |dir| dir.total_size }
-  .total_size
+p sizes.filter{ _1 >= MIN_FILE_SIZE }.min
