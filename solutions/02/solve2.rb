@@ -52,12 +52,12 @@ def move_needed a, result
 end
 
 # part 1
-p INPUTS.reduce(0) {|acc, (opponent, me)|
-  acc + (outcome opponent, me) + (SCORE[me])
+p INPUTS.sum{ |(opponent, me)|
+  outcome(opponent, me) + SCORE[me]
 }
 
 # part 2
-p INPUTS.reduce(0) {|acc, (opponent, result)|
+p INPUTS.sum {|(opponent, result)|
   me = move_needed opponent, result
-  acc + (outcome opponent, me) + (SCORE[me])
+  outcome(opponent, me) + SCORE[me]
 }
