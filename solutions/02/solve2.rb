@@ -57,7 +57,7 @@ p INPUTS.sum{ |(opponent, me)|
 }
 
 # part 2
-p INPUTS.sum {|(opponent, result)|
+p INPUTS.sum{ |(opponent, result)|
   me = move_needed opponent, result
   outcome(opponent, me) + SCORE[me]
 }
