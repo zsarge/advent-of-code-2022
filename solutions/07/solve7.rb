@@ -30,10 +30,12 @@ ElfFile = Struct.new(:size, :name) # the name "File" is already used
 
 $top = Directory.new("/", nil)
 
-def process inputs
-  location = $top
+INPUTS = File.readlines("input7.txt", chomp: true)
 
-  inputs.each do |input|
+# build up directory tree with files
+location = $top
+INPUTS.drop(1) # drop 1 to ignore "cd /"
+  .each do |input|
     case input
     when /\$ cd \.\./ # cd ..
       location = location.parentDir
@@ -45,12 +47,6 @@ def process inputs
       location.files.push Directory.new($1, location)
     end
   end
-end
-
-INPUTS = File.readlines("input7.txt", chomp: true)
-
-# build up directory tree with files
-process INPUTS.drop(1) # drop 1 to ignore "cd /"
 
 # calculate file sizes
 TOAL_UNUSED_SPACE = 70_000_000 - $top.size
