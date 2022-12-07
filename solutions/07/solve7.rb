@@ -8,7 +8,7 @@ class Directory
   attr_accessor :files
   attr_reader :parentDir, :name, :total_size
 
-  def initialize(name, parentDir, files=[]) 
+  def initialize(name, parentDir, files=[])
     @files = files
     @parentDir = parentDir
     @name = name
@@ -16,7 +16,7 @@ class Directory
   end
 
   def size # TODO: clean up
-    @total_size = 0 
+    @total_size = 0
     @files.each do |file|
       @total_size += file.size
     end
@@ -44,33 +44,34 @@ def process inputs
 
   inputs.each do |input|
     case input
-    when /\$ cd \.\./
-      # puts "cd up a dir"
+    when /\$ cd \.\./ # cd ..
       location = location.parentDir
-    when /\$ cd (.*)/
-      # puts "cd into #{$1}"
-      location = location.files.find {|file| 
+    when /\$ cd (.*)/ # cd <name>
+      location = location.files.find {|file|
         file.instance_of?(Directory) && file.name == $1
       }
-    when /(\d+) (\S+)/
-      # puts "a file named #{$2} with a size #{$1}"
+    when /(\d+) (\S+)/ # a file, named $2 with size $1
       location.files.push ElfFile.new($1.to_i, $2)
-    when /dir (\S+)/
-      # puts "a directory named #{$1}"
+    when /dir (\S+)/ # a directory named $1
       location.files.push Directory.new($1, location)
-    # else
-      # puts "not implemented"
     end
   end
 end
 
-FILE_NAME = "input7.txt"
-# FILE_NAME = "test.txt"
-INPUTS = File.readlines(FILE_NAME, chomp: true)
+INPUTS = File.readlines("input7.txt", chomp: true)
 
-process INPUTS.drop(1)
-$top.size
+process INPUTS.drop(1) # drop 1 to ignore "cd /"
+TOAL_UNUSED_SPACE = 70_000_000 - $top.size
+MIN_FILE_SIZE = 30_000_000 - TOAL_UNUSED_SPACE
 
-p $top.flatten_dirs.filter{ |dir| dir.total_size <= 100000 }.sum{ |dir| dir.total_size }
+# part 1
+p $top.flatten_dirs
+  .filter{ |dir| dir.total_size <= 100000 }
+  .sum{ |dir| dir.total_size }
 
-
+# part 2
+p $top.flatten_dirs
+  .filter{ |dir| dir.total_size >= MIN_FILE_SIZE }
+  .sort_by{ |dir| dir.total_size }
+  .min{ |dir| dir.total_size }
+  .total_size
