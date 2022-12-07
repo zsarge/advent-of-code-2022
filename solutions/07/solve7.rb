@@ -15,27 +15,19 @@ class Directory
     @total_size = 0
   end
 
-  def size # TODO: clean up
-    @total_size = 0
-    @files.each do |file|
-      @total_size += file.size
-    end
-    return @total_size
+  def size
+    @total_size = @files.sum {|file| file.size}
   end
 
-  def flatten_dirs # TODO: clean up
-    buf = []
-    @files.each do |file|
-      if file.instance_of? Directory
-        buf.push file
-        buf.concat file.flatten_dirs
-      end
-    end
-    return buf
+  def flatten_dirs 
+    @files.grep(Directory).reduce([]) { |acc, file|
+      acc.push file
+      acc.concat file.flatten_dirs
+    }
   end
 end
 
-ElfFile = Struct.new(:size, :name) # "File" is already used
+ElfFile = Struct.new(:size, :name) # the name "File" is already used
 
 $top = Directory.new("/", nil)
 
@@ -47,9 +39,7 @@ def process inputs
     when /\$ cd \.\./ # cd ..
       location = location.parentDir
     when /\$ cd (.*)/ # cd <name>
-      location = location.files.find {|file|
-        file.instance_of?(Directory) && file.name == $1
-      }
+      location = location.files.find{ |file| file.name == $1 }
     when /(\d+) (\S+)/ # a file, named $2 with size $1
       location.files.push ElfFile.new($1.to_i, $2)
     when /dir (\S+)/ # a directory named $1
@@ -61,6 +51,7 @@ end
 INPUTS = File.readlines("input7.txt", chomp: true)
 
 process INPUTS.drop(1) # drop 1 to ignore "cd /"
+
 TOAL_UNUSED_SPACE = 70_000_000 - $top.size
 MIN_FILE_SIZE = 30_000_000 - TOAL_UNUSED_SPACE
 
