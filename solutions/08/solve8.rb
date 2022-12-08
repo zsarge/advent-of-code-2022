@@ -24,8 +24,8 @@ def part_1
   visible_edges = (TREES.size * 2) + (TREES[0].size * 2) - 4
 
   center = (1...TREES.size-1).sum { |y|
-    (1...TREES[0].size-1).sum { |x|
-      visible?(x,y) ? 1 : 0
+    (1...TREES[0].size-1).count { |x|
+      visible?(x,y)
     }
   }
 
@@ -33,4 +33,33 @@ def part_1
 end
 
 
-p part_1
+def viewing_distance x, y
+  (up, down) = [(y-1).downto(0), (y+1...TREES.size)].map { |range|
+    count = 0
+    range.each do |y2|
+      count += 1 
+      break unless TREES[y2][x] < TREES[y][x] 
+    end
+    count
+  }
+  (left, right) = [(x-1).downto(0), (x+1...TREES[0].size)].map { |range|
+    count = 0
+    range.each do |x2|
+      count += 1 
+      break unless TREES[y][x2] < TREES[y][x] 
+    end
+    count
+  }
+
+  [up, left, right, down]
+end
+
+
+def scenic_score x, y
+  viewing_distance(x,y).reduce(&:*)
+end
+
+
+p (1...TREES.size-1).to_a.product((1...TREES[0].size-1).to_a)
+  .map{|(x,y)| scenic_score(x,y)}
+  .max
